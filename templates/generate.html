@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generate CV</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <h1>Generate CV</h1>
+    <form method="POST" action="/result">
+      <input type="text" name="name" placeholder="Name" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="text" name="specialization" placeholder="Specialization" required />
+      <textarea name="skills" placeholder="Skills"></textarea>
+      <textarea name="courses" placeholder="Courses"></textarea>
+      <textarea name="projects" placeholder="Projects"></textarea>
+      <textarea name="languages" placeholder="Languages"></textarea>
+      <textarea name="job_description" placeholder="Job Description"></textarea>
+      <button class="btn" type="submit">Generate</button>
+    </form>
+  </div>
+</body>
+</html>
