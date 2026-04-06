@@ -1,23 +1,31 @@
 body {
   font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  background: #f4f4f4;
   margin: 0;
   padding: 0;
+  color: #111;
 }
 
 .container {
-  max-width: 700px;
+  max-width: 850px;
   margin: 40px auto;
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+h1, h2 {
+  margin-top: 0;
 }
 
 input, textarea {
   width: 100%;
-  margin-bottom: 12px;
-  padding: 12px;
+  margin-bottom: 14px;
+  padding: 14px;
   font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   box-sizing: border-box;
 }
 
@@ -27,17 +35,71 @@ textarea {
 
 .btn {
   display: inline-block;
-  background: black;
-  color: white;
-  padding: 10px 16px;
+  background: #111;
+  color: #fff;
+  padding: 12px 18px;
   text-decoration: none;
   border: none;
+  border-radius: 10px;
   cursor: pointer;
+  margin-right: 10px;
 }
 
-pre {
+.cv-page {
+  background: #fff;
+}
+
+.cv-top {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+}
+
+.role {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 6px 0;
+}
+
+.email {
+  color: #666;
+}
+
+.cv-section {
+  margin-bottom: 22px;
+}
+
+.cv-section h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.cv-output {
   white-space: pre-wrap;
-  background: #eee;
-  padding: 16px;
-  border-radius: 8px;
+  background: #f7f7f7;
+  padding: 18px;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  line-height: 1.6;
+}
+
+.actions {
+  margin-top: 28px;
+}
+
+@media print {
+  .actions {
+    display: none;
+  }
+
+  body {
+    background: white;
+  }
+
+  .container {
+    box-shadow: none;
+    margin: 0;
+    max-width: 100%;
+    border-radius: 0;
+  }
 }
