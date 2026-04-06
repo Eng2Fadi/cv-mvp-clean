@@ -17,7 +17,7 @@ def generate_cv_with_ai(data):
     api_key = os.environ.get("DEEPSEEK_API_KEY")
 
     prompt = f"""
-YouYou are an expert ATS resume optimizer.
+You are an expert ATS resume optimizer.
 
 Your job is to:
 1. Analyze the target job description
@@ -43,9 +43,10 @@ Rules:
 - Keep the CV ATS-friendly
 - Use one-column professional structure
 - No tables, no icons, no fancy formatting
-- Return ONLY valid JSON
-- Do not add markdown
-- Do not explain outside JSON
+- Return ONLY raw JSON.
+- Do not use markdown.
+- Do not wrap the JSON in triple backticks.
+- Do not add any explanation before or after the JSON.
 
 Required JSON structure:
 
@@ -94,7 +95,7 @@ Required JSON structure:
             "messages": [
                 {"role": "user", "content": prompt}
             ],
-            "temperature": 0.3,
+            "temperature": 0.2,
             "max_tokens": 1800
         },
         timeout=60
@@ -102,7 +103,23 @@ Required JSON structure:
 
     response.raise_for_status()
     result = response.json()
-    content = result["choices"][0]["message"]["content"]
+    content = result["choices"][0]["message"]["content"].strip()
+
+    # Clean the response to ensure it's valid JSON
+    if content.startswith("```json"):
+        content = content.replace("```json", "", 1).strip()
+    if content.startswith("```"):
+        content = content.replace("```", "", 1).strip()
+    if content.endswith("```"):
+        content = content[:-3].strip()
+
+    start = content.find("{")
+    end = content.rfind("}")
+
+    if start == -1 or end == -1:
+        raise ValueError(f"Model did not return valid JSON. Raw output: {content}")
+
+    content = content[start:end+1]
 
     return json.loads(content)
 
@@ -119,22 +136,25 @@ def result():
         'job_description': request.form['job_description']
     }
 
-    analysis = generate_cv_with_ai(data)
-    cv = analysis["cv"]
-    ats_score = analysis["ats_score"]
-    matched_keywords = analysis["matched_keywords"]
-    missing_keywords = analysis["missing_keywords"]
-    improvement_suggestions = analysis["improvement_suggestions"]
+    try:
+        analysis = generate_cv_with_ai(data)
+        cv = analysis["cv"]
+        ats_score = analysis["ats_score"]
+        matched_keywords = analysis["matched_keywords"]
+        missing_keywords = analysis["missing_keywords"]
+        improvement_suggestions = analysis["improvement_suggestions"]
 
-    return render_template(
-        "result.html",
-        cv=cv,
-        ats_score=ats_score,
-        matched_keywords=matched_keywords,
-        missing_keywords=missing_keywords,
-        improvement_suggestions=improvement_suggestions,
-        is_paid=False
-    )
+        return render_template(
+            "result.html",
+            cv=cv,
+            ats_score=ats_score,
+            matched_keywords=matched_keywords,
+            missing_keywords=missing_keywords,
+            improvement_suggestions=improvement_suggestions,
+            is_paid=False
+        )
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
