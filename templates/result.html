@@ -7,10 +7,59 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-  <div class="container">
-    <h1>Your CV</h1>
-    <pre>{{ generated_cv }}</pre>
-    <a class="btn" href="/generate">Back</a>
+  <div class="container cv-page">
+    <div class="cv-top">
+      <h1>{{ name }}</h1>
+      <p class="role">{{ specialization }}</p>
+      <p class="email">{{ email }}</p>
+    </div>
+
+    {% if generated_cv %}
+    <div class="cv-section">
+      <h2>Professional CV</h2>
+      <pre class="cv-output">{{ generated_cv }}</pre>
+    </div>
+    {% endif %}
+
+    {% if skills %}
+    <div class="cv-section">
+      <h2>Skills</h2>
+      <p>{{ skills }}</p>
+    </div>
+    {% endif %}
+
+    {% if courses %}
+    <div class="cv-section">
+      <h2>Courses</h2>
+      <p>{{ courses }}</p>
+    </div>
+    {% endif %}
+
+    {% if projects %}
+    <div class="cv-section">
+      <h2>Projects</h2>
+      <p>{{ projects }}</p>
+    </div>
+    {% endif %}
+
+    {% if languages %}
+    <div class="cv-section">
+      <h2>Languages</h2>
+      <p>{{ languages }}</p>
+    </div>
+    {% endif %}
+
+    {% if job_description %}
+    <div class="cv-section">
+      <h2>Target Job</h2>
+      <p>{{ job_description }}</p>
+    </div>
+    {% endif %}
+
+    <div class="actions">
+      <a class="btn" href="/generate">Back</a>
+      <button class="btn" onclick="window.print()">Download PDF</button>
+    </div>
   </div>
 </body>
 </html>
