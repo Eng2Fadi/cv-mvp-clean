@@ -3,57 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ name }} - CV</title>
+  <title>{{ cv.full_name }} - CV</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
   <div class="container cv-page">
     <div class="cv-top">
-      <h1>{{ name }}</h1>
-      <p class="role">{{ specialization }}</p>
-      <p class="email">{{ email }}</p>
+      <h1>{{ cv.full_name }}</h1>
+      <p class="role">{{ cv.headline }}</p>
+      <p class="email">{{ cv.email }}</p>
     </div>
 
-    {% if generated_cv %}
-    <div class="cv-section">
-      <h2>Professional CV</h2>
-      <pre class="cv-output">{{ generated_cv }}</pre>
-    </div>
+    <!-- ATS SCORE SECTION -->
+    <section class="cv-section ats-score-section">
+      <h2>ATS SCORE</h2>
+      <div class="score-display">
+        <span class="score-number">{{ ats_score }}/100</span>
+        <div class="score-bar">
+          <div class="score-fill" style="width: {{ ats_score }}%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCHED KEYWORDS SECTION -->
+    {% if matched_keywords %}
+    <section class="cv-section">
+      <h2>MATCHED KEYWORDS</h2>
+      <div class="keywords-container">
+        {% for keyword in matched_keywords %}
+        <span class="keyword matched">{{ keyword }}</span>
+        {% endfor %}
+      </div>
+    </section>
     {% endif %}
 
-    {% if skills %}
-    <div class="cv-section">
-      <h2>Skills</h2>
-      <p>{{ skills }}</p>
-    </div>
+    <!-- MISSING KEYWORDS SECTION -->
+    {% if missing_keywords %}
+    <section class="cv-section">
+      <h2>MISSING KEYWORDS</h2>
+      <div class="keywords-container">
+        {% for keyword in missing_keywords %}
+        <span class="keyword missing">{{ keyword }}</span>
+        {% endfor %}
+      </div>
+    </section>
     {% endif %}
 
-    {% if courses %}
-    <div class="cv-section">
-      <h2>Courses</h2>
-      <p>{{ courses }}</p>
-    </div>
+    <!-- IMPROVEMENT SUGGESTIONS SECTION -->
+    {% if improvement_suggestions %}
+    <section class="cv-section">
+      <h2>IMPROVEMENT SUGGESTIONS</h2>
+      <ul class="suggestions-list">
+        {% for suggestion in improvement_suggestions %}
+        <li>{{ suggestion }}</li>
+        {% endfor %}
+      </ul>
+    </section>
     {% endif %}
 
-    {% if projects %}
-    <div class="cv-section">
-      <h2>Projects</h2>
-      <p>{{ projects }}</p>
-    </div>
+    <!-- CV CONTENT SECTIONS -->
+    {% if cv.branding_line %}
+    <section class="cv-section">
+      <h3>{{ cv.branding_line }}</h3>
+    </section>
     {% endif %}
 
-    {% if languages %}
-    <div class="cv-section">
-      <h2>Languages</h2>
-      <p>{{ languages }}</p>
-    </div>
+    {% if cv.career_summary %}
+    <section class="cv-section">
+      <h2>PROFESSIONAL SUMMARY</h2>
+      <p>{{ cv.career_summary }}</p>
+    </section>
     {% endif %}
 
-    {% if job_description %}
-    <div class="cv-section">
-      <h2>Target Job</h2>
-      <p>{{ job_description }}</p>
-    </div>
+    {% if cv.hard_skills or cv.soft_skills %}
+    <section class="cv-section">
+      <h2>SKILLS</h2>
+      {% if cv.hard_skills %}
+      <div class="skills-group">
+        <h3>Technical Skills</h3>
+        <p>{{ cv.hard_skills | join(', ') }}</p>
+      </div>
+      {% endif %}
+      {% if cv.soft_skills %}
+      <div class="skills-group">
+        <h3>Soft Skills</h3>
+        <p>{{ cv.soft_skills | join(', ') }}</p>
+      </div>
+      {% endif %}
+    </section>
+    {% endif %}
+
+    {% if cv.experience %}
+    <section class="cv-section">
+      <h2>EXPERIENCE</h2>
+      {% for exp in cv.experience %}
+      <div class="experience-item">
+        <div class="exp-header">
+          <h3>{{ exp.title }}</h3>
+          <span class="exp-date">{{ exp.date }}</span>
+        </div>
+        <p class="exp-company">{{ exp.company }} | {{ exp.location }}</p>
+        <ul class="exp-bullets">
+          {% for bullet in exp.bullets %}
+          <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if cv.education %}
+    <section class="cv-section">
+      <h2>EDUCATION</h2>
+      <ul>
+        {% for edu in cv.education %}
+        <li>{{ edu }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    {% if cv.certificates %}
+    <section class="cv-section">
+      <h2>CERTIFICATES</h2>
+      <ul>
+        {% for cert in cv.certificates %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    {% if cv.languages %}
+    <section class="cv-section">
+      <h2>LANGUAGES</h2>
+      <ul>
+        {% for lang in cv.languages %}
+        <li>{{ lang }}</li>
+        {% endfor %}
+      </ul>
+    </section>
     {% endif %}
 
     <div class="actions">
